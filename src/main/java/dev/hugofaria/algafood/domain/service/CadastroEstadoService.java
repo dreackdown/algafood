@@ -16,12 +16,12 @@ public class CadastroEstadoService {
     private EstadoRepository estadoRepository;
 
     public Estado salvar(Estado estado) {
-        return estadoRepository.salvar(estado);
+        return estadoRepository.save(estado);
     }
 
-    public void remover(Long estadoId) {
+    public void excluir(Long estadoId) {
         try {
-            estadoRepository.remover(estadoId);
+            estadoRepository.deleteById(estadoId);
 
         } catch (EmptyResultDataAccessException e) {
             throw new EntidadeNaoEncontradaException(
@@ -29,7 +29,7 @@ public class CadastroEstadoService {
 
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
-                    String.format("Estado de código %d não pode ser removida, pois está em uso", estadoId));
+                    String.format("Estado de código %d não pode ser removido, pois está em uso", estadoId));
         }
     }
 }
