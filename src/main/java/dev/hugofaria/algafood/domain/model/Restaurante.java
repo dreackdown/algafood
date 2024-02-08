@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.hugofaria.algafood.Groups;
+import dev.hugofaria.algafood.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,6 +32,7 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
+    @NotNull
     @PositiveOrZero
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
@@ -67,4 +68,5 @@ public class Restaurante {
     @JsonIgnore
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
+
 }

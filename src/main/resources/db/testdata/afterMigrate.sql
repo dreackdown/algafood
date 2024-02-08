@@ -29,6 +29,12 @@ insert into cozinha (id, nome) values (1, 'Tailandesa');
 insert into cozinha (id, nome) values (2, 'Indiana');
 insert into cozinha (id, nome) values (3, 'Argentina');
 insert into cozinha (id, nome) values (4, 'Brasileira');
+insert into cozinha (id, nome) values(5, 'Mexicana');
+insert into cozinha (id, nome) values(6, 'Italiana');
+insert into cozinha (id, nome) values(7, 'Japonesa');
+insert into cozinha (id, nome) values(8, 'Árabe');
+insert into cozinha (id, nome) values(9, 'Francesa');
+insert into cozinha (id, nome) values(10, 'Chinesa');
 
 insert into estado (id, nome) values (1, 'Minas Gerais');
 insert into estado (id, nome) values (2, 'São Paulo');

@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import dev.hugofaria.algafood.Groups;
+import dev.hugofaria.algafood.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
