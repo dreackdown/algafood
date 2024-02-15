@@ -4,18 +4,17 @@ import dev.hugofaria.algafood.domain.exception.RestauranteNaoEncontradoException
 import dev.hugofaria.algafood.domain.model.Cozinha;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import dev.hugofaria.algafood.domain.repository.RestauranteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class CadastroRestauranteService {
 
-    @Autowired
-    private RestauranteRepository restauranteRepository;
+    private final RestauranteRepository restauranteRepository;
 
-    @Autowired
-    private CadastroCozinhaService cadastroCozinha;
+    private final CadastroCozinhaService cadastroCozinha;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
