@@ -8,21 +8,21 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({ ElementType.TYPE })
+@Target({ElementType.TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = { ValorZeroIncluiDescricaoValidator.class })
+@Constraint(validatedBy = {ValorZeroIncluiDescricaoValidator.class})
 public @interface ValorZeroIncluiDescricao {
 
-	String message() default "descrição obrigatória inválida";
+    String message() default "descrição obrigatória inválida";
 
-	Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default { };
-	
-	String valorField();
-	
-	String descricaoField();
-	
-	String descricaoObrigatoria();
-	
+    Class<? extends Payload>[] payload() default {};
+
+    String valorField();
+
+    String descricaoField();
+
+    String descricaoObrigatoria();
+
 }
