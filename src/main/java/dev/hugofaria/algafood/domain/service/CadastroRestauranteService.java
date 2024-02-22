@@ -1,6 +1,7 @@
 package dev.hugofaria.algafood.domain.service;
 
 import dev.hugofaria.algafood.domain.exception.RestauranteNaoEncontradoException;
+import dev.hugofaria.algafood.domain.model.Cidade;
 import dev.hugofaria.algafood.domain.model.Cozinha;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import dev.hugofaria.algafood.domain.repository.RestauranteRepository;
@@ -16,13 +17,18 @@ public class CadastroRestauranteService {
 
     private final CadastroCozinhaService cadastroCozinha;
 
+    private final CadastroCidadeService cadastroCidade;
+
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
+        Long cidadeId = restaurante.getEndereco().getCidade().getId();
 
         Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
+        Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
         restaurante.setCozinha(cozinha);
+        restaurante.getEndereco().setCidade(cidade);
 
         return restauranteRepository.save(restaurante);
     }

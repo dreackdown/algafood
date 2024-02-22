@@ -4,6 +4,7 @@ package dev.hugofaria.algafood.api.controller;
 import dev.hugofaria.algafood.api.mapper.RestauranteMapper;
 import dev.hugofaria.algafood.api.model.RestauranteDTO;
 import dev.hugofaria.algafood.api.model.input.RestauranteInput;
+import dev.hugofaria.algafood.domain.exception.CidadeNaoEncontradaException;
 import dev.hugofaria.algafood.domain.exception.CozinhaNaoEncontradaException;
 import dev.hugofaria.algafood.domain.exception.NegocioException;
 import dev.hugofaria.algafood.domain.model.Restaurante;
@@ -46,7 +47,7 @@ public class RestauranteController {
             Restaurante restaurante = restauranteMapper.toDomainObject(restauranteInput);
 
             return restauranteMapper.toModel(cadastroRestaurante.salvar(restaurante));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
@@ -59,7 +60,7 @@ public class RestauranteController {
             restauranteMapper.copyToDomainObject(restauranteInput, restauranteAtual);
 
             return restauranteMapper.toModel(cadastroRestaurante.salvar(restauranteAtual));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }

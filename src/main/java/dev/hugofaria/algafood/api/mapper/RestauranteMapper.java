@@ -2,6 +2,7 @@ package dev.hugofaria.algafood.api.mapper;
 
 import dev.hugofaria.algafood.api.model.RestauranteDTO;
 import dev.hugofaria.algafood.api.model.input.RestauranteInput;
+import dev.hugofaria.algafood.domain.model.Cidade;
 import dev.hugofaria.algafood.domain.model.Cozinha;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,10 @@ public class RestauranteMapper {
         // Para evitar org.hibernate.HibernateException: identifier of an instance of
         // dev.hugofaria.algafood.domain.model.Cozinha was altered from 1 to 2
         restaurante.setCozinha(new Cozinha());
+
+        if (restaurante.getEndereco() != null) {
+            restaurante.getEndereco().setCidade(new Cidade());
+        }
 
         modelMapper.map(restauranteInput, restaurante);
     }
