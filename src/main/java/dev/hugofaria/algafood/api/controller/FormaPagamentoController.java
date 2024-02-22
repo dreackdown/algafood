@@ -49,8 +49,7 @@ public class FormaPagamentoController {
     }
 
     @PutMapping("/{formaPagamentoId}")
-    public FormaPagamentoDTO atualizar(@PathVariable Long formaPagamentoId,
-                                       @RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
+    public FormaPagamentoDTO atualizar(@PathVariable Long formaPagamentoId, @RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
         FormaPagamento formaPagamentoAtual = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
 
         formaPagamentoMapper.copyToDomainObject(formaPagamentoInput, formaPagamentoAtual);
