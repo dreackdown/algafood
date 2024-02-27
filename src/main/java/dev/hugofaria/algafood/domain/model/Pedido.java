@@ -37,7 +37,7 @@ public class Pedido {
     private OffsetDateTime dataCancelamento;
     private OffsetDateTime dataEntrega;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private FormaPagamento formaPagamento;
 
@@ -49,7 +49,7 @@ public class Pedido {
     @JoinColumn(name = "usuario_cliente_id", nullable = false)
     private Usuario cliente;
 
-    @OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itens = new ArrayList<>();
 
     public void calcularValorTotal() {

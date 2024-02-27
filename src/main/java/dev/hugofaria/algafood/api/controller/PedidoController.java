@@ -1,7 +1,9 @@
 package dev.hugofaria.algafood.api.controller;
 
 import dev.hugofaria.algafood.api.dto.PedidoDTO;
+import dev.hugofaria.algafood.api.dto.PedidoResumoDTO;
 import dev.hugofaria.algafood.api.mapper.PedidoMapper;
+import dev.hugofaria.algafood.api.mapper.PedidoResumoMapper;
 import dev.hugofaria.algafood.domain.model.Pedido;
 import dev.hugofaria.algafood.domain.repository.PedidoRepository;
 import dev.hugofaria.algafood.domain.service.EmissaoPedidoService;
@@ -24,11 +26,13 @@ public class PedidoController {
 
     private final PedidoMapper pedidoMapper;
 
+    private final PedidoResumoMapper pedidoResumoMapper;
+
     @GetMapping
-    public List<PedidoDTO> listar() {
+    public List<PedidoResumoDTO> listar() {
         List<Pedido> todosPedidos = pedidoRepository.findAll();
 
-        return pedidoMapper.toCollectionModel(todosPedidos);
+        return pedidoResumoMapper.toCollectionModel(todosPedidos);
     }
 
     @GetMapping("/{pedidoId}")
