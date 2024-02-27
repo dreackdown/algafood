@@ -2,6 +2,7 @@ package dev.hugofaria.algafood.domain.service;
 
 import dev.hugofaria.algafood.domain.exception.NegocioException;
 import dev.hugofaria.algafood.domain.exception.UsuarioNaoEncontradoException;
+import dev.hugofaria.algafood.domain.model.Grupo;
 import dev.hugofaria.algafood.domain.model.Usuario;
 import dev.hugofaria.algafood.domain.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,8 @@ import java.util.Optional;
 public class CadastroUsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+
+    private final CadastroGrupoService cadastroGrupo;
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
@@ -39,6 +42,22 @@ public class CadastroUsuarioService {
         }
 
         usuario.setSenha(novaSenha);
+    }
+
+    @Transactional
+    public void desassociarGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+        usuario.removerGrupo(grupo);
+    }
+
+    @Transactional
+    public void associarGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+        usuario.adicionarGrupo(grupo);
     }
 
     public Usuario buscarOuFalhar(Long usuarioId) {
