@@ -1,10 +1,7 @@
 package dev.hugofaria.algafood.domain.service;
 
 import dev.hugofaria.algafood.domain.exception.RestauranteNaoEncontradoException;
-import dev.hugofaria.algafood.domain.model.Cidade;
-import dev.hugofaria.algafood.domain.model.Cozinha;
-import dev.hugofaria.algafood.domain.model.FormaPagamento;
-import dev.hugofaria.algafood.domain.model.Restaurante;
+import dev.hugofaria.algafood.domain.model.*;
 import dev.hugofaria.algafood.domain.repository.RestauranteRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +18,8 @@ public class CadastroRestauranteService {
     private final CadastroCidadeService cadastroCidade;
 
     private final CadastroFormaPagamentoService cadastroFormaPagamento;
+
+    private final CadastroUsuarioService cadastroUsuario;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
@@ -78,6 +77,22 @@ public class CadastroRestauranteService {
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
 
         restaurante.adicionarFormaPagamento(formaPagamento);
+    }
+
+    @Transactional
+    public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+        restaurante.removerResponsavel(usuario);
+    }
+
+    @Transactional
+    public void associarResponsavel(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+        restaurante.adicionarResponsavel(usuario);
     }
 
     public Restaurante buscarOuFalhar(Long restauranteId) {
