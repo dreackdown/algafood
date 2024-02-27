@@ -1,8 +1,8 @@
 package dev.hugofaria.algafood.api.controller;
 
 import dev.hugofaria.algafood.api.mapper.ProdutoMapper;
-import dev.hugofaria.algafood.api.model.ProdutoDTO;
-import dev.hugofaria.algafood.api.model.input.ProdutoInput;
+import dev.hugofaria.algafood.api.dto.ProdutoDTO;
+import dev.hugofaria.algafood.api.dto.input.ProdutoInput;
 import dev.hugofaria.algafood.domain.model.Produto;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import dev.hugofaria.algafood.domain.repository.ProdutoRepository;
@@ -41,7 +41,7 @@ public class RestauranteProdutoController {
     public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         Produto produto = cadastroProduto.buscarOuFalhar(restauranteId, produtoId);
 
-        return produtoMapper.toModel(produto);
+        return produtoMapper.toDto(produto);
     }
 
     @PostMapping
@@ -54,7 +54,7 @@ public class RestauranteProdutoController {
 
         produto = cadastroProduto.salvar(produto);
 
-        return produtoMapper.toModel(produto);
+        return produtoMapper.toDto(produto);
     }
 
     @PutMapping("/{produtoId}")
@@ -65,6 +65,6 @@ public class RestauranteProdutoController {
 
         produtoAtual = cadastroProduto.salvar(produtoAtual);
 
-        return produtoMapper.toModel(produtoAtual);
+        return produtoMapper.toDto(produtoAtual);
     }
 }

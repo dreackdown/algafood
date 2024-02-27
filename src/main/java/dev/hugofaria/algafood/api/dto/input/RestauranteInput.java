@@ -1,8 +1,9 @@
-package dev.hugofaria.algafood.api.model.input;
+package dev.hugofaria.algafood.api.dto.input;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
@@ -10,19 +11,20 @@ import java.math.BigDecimal;
 
 @Setter
 @Getter
-public class ProdutoInput {
+public class RestauranteInput {
 
     @NotBlank
     private String nome;
-    
-    @NotBlank
-    private String descricao;
-    
+
     @NotNull
     @PositiveOrZero
-    private BigDecimal preco;
-    
+    private BigDecimal taxaFrete;
+
+    @Valid
     @NotNull
-    private Boolean ativo;
-    
+    private CozinhaIdInput cozinha;
+
+    @Valid
+    @NotNull
+    private EnderecoInput endereco;
 }

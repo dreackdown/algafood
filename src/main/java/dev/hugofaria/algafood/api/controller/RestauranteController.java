@@ -2,11 +2,12 @@ package dev.hugofaria.algafood.api.controller;
 
 
 import dev.hugofaria.algafood.api.mapper.RestauranteMapper;
-import dev.hugofaria.algafood.api.model.RestauranteDTO;
-import dev.hugofaria.algafood.api.model.input.RestauranteInput;
+import dev.hugofaria.algafood.api.dto.RestauranteDTO;
+import dev.hugofaria.algafood.api.dto.input.RestauranteInput;
 import dev.hugofaria.algafood.domain.exception.CidadeNaoEncontradaException;
 import dev.hugofaria.algafood.domain.exception.CozinhaNaoEncontradaException;
 import dev.hugofaria.algafood.domain.exception.NegocioException;
+import dev.hugofaria.algafood.domain.exception.RestauranteNaoEncontradoException;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import dev.hugofaria.algafood.domain.repository.RestauranteRepository;
 import dev.hugofaria.algafood.domain.service.CadastroRestauranteService;
@@ -37,7 +38,7 @@ public class RestauranteController {
     public RestauranteDTO buscar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        return restauranteMapper.toModel(restaurante);
+        return restauranteMapper.toDto(restaurante);
     }
 
     @PostMapping
@@ -46,7 +47,7 @@ public class RestauranteController {
         try {
             Restaurante restaurante = restauranteMapper.toDomainObject(restauranteInput);
 
-            return restauranteMapper.toModel(cadastroRestaurante.salvar(restaurante));
+            return restauranteMapper.toDto(cadastroRestaurante.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -59,7 +60,7 @@ public class RestauranteController {
 
             restauranteMapper.copyToDomainObject(restauranteInput, restauranteAtual);
 
-            return restauranteMapper.toModel(cadastroRestaurante.salvar(restauranteAtual));
+            return restauranteMapper.toDto(cadastroRestaurante.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
@@ -75,6 +76,26 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId) {
         cadastroRestaurante.inativar(restauranteId);
+    }
+
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            cadastroRestaurante.ativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            cadastroRestaurante.inativar(restauranteIds);
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
     }
 
     @PutMapping("/{restauranteId}/abertura")

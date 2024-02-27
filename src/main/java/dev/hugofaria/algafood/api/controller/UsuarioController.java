@@ -1,10 +1,10 @@
 package dev.hugofaria.algafood.api.controller;
 
 import dev.hugofaria.algafood.api.mapper.UsuarioMapper;
-import dev.hugofaria.algafood.api.model.UsuarioDTO;
-import dev.hugofaria.algafood.api.model.input.SenhaInput;
-import dev.hugofaria.algafood.api.model.input.UsuarioComSenhaInput;
-import dev.hugofaria.algafood.api.model.input.UsuarioInput;
+import dev.hugofaria.algafood.api.dto.UsuarioDTO;
+import dev.hugofaria.algafood.api.dto.input.SenhaInput;
+import dev.hugofaria.algafood.api.dto.input.UsuarioComSenhaInput;
+import dev.hugofaria.algafood.api.dto.input.UsuarioInput;
 import dev.hugofaria.algafood.domain.model.Usuario;
 import dev.hugofaria.algafood.domain.repository.UsuarioRepository;
 import dev.hugofaria.algafood.domain.service.CadastroUsuarioService;
@@ -37,7 +37,7 @@ public class UsuarioController {
     public UsuarioDTO buscar(@PathVariable Long usuarioId) {
         Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
 
-        return usuarioMapper.toModel(usuario);
+        return usuarioMapper.toDto(usuario);
     }
 
     @PostMapping
@@ -46,7 +46,7 @@ public class UsuarioController {
         Usuario usuario = usuarioMapper.toDomainObject(usuarioInput);
         usuario = cadastroUsuario.salvar(usuario);
 
-        return usuarioMapper.toModel(usuario);
+        return usuarioMapper.toDto(usuario);
     }
 
     @PutMapping("/{usuarioId}")
@@ -55,7 +55,7 @@ public class UsuarioController {
         usuarioMapper.copyToDomainObject(usuarioInput, usuarioAtual);
         usuarioAtual = cadastroUsuario.salvar(usuarioAtual);
 
-        return usuarioMapper.toModel(usuarioAtual);
+        return usuarioMapper.toDto(usuarioAtual);
     }
 
     @PutMapping("/{usuarioId}/senha")

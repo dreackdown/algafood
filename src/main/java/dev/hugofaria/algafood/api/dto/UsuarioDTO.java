@@ -1,13 +1,13 @@
-package dev.hugofaria.algafood.api.model;
+package dev.hugofaria.algafood.api.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class CidadeResumoDTO {
+public class UsuarioDTO {
 
     private Long id;
     private String nome;
-    private String estado;
+    private String email;            
 }

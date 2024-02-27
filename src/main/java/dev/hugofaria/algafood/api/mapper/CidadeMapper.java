@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.mapper;
 
-import dev.hugofaria.algafood.api.model.CidadeDTO;
-import dev.hugofaria.algafood.api.model.input.CidadeInput;
+import dev.hugofaria.algafood.api.dto.CidadeDTO;
+import dev.hugofaria.algafood.api.dto.input.CidadeInput;
 import dev.hugofaria.algafood.domain.model.Cidade;
 import dev.hugofaria.algafood.domain.model.Estado;
 import lombok.AllArgsConstructor;
@@ -17,13 +17,13 @@ public class CidadeMapper {
 
     private final ModelMapper modelMapper;
 
-    public CidadeDTO toModel(Cidade cidade) {
+    public CidadeDTO toDto(Cidade cidade) {
         return modelMapper.map(cidade, CidadeDTO.class);
     }
 
     public List<CidadeDTO> toCollectionModel(List<Cidade> cidades) {
         return cidades.stream()
-                .map(this::toModel)
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 

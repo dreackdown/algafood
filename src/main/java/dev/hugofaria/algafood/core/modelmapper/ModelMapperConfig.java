@@ -1,6 +1,6 @@
 package dev.hugofaria.algafood.core.modelmapper;
 
-import dev.hugofaria.algafood.api.model.EnderecoDTO;
+import dev.hugofaria.algafood.api.dto.EnderecoDTO;
 import dev.hugofaria.algafood.domain.model.Endereco;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

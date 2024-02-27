@@ -1,8 +1,8 @@
 package dev.hugofaria.algafood.api.controller;
 
 import dev.hugofaria.algafood.api.mapper.GrupoMapper;
-import dev.hugofaria.algafood.api.model.GrupoDTO;
-import dev.hugofaria.algafood.api.model.input.GrupoInput;
+import dev.hugofaria.algafood.api.dto.GrupoDTO;
+import dev.hugofaria.algafood.api.dto.input.GrupoInput;
 import dev.hugofaria.algafood.domain.model.Grupo;
 import dev.hugofaria.algafood.domain.repository.GrupoRepository;
 import dev.hugofaria.algafood.domain.service.CadastroGrupoService;
@@ -35,7 +35,7 @@ public class GrupoController {
     public GrupoDTO buscar(@PathVariable Long grupoId) {
         Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
 
-        return grupoMapper.toModel(grupo);
+        return grupoMapper.toDto(grupo);
     }
 
     @PostMapping
@@ -45,7 +45,7 @@ public class GrupoController {
 
         grupo = cadastroGrupo.salvar(grupo);
 
-        return grupoMapper.toModel(grupo);
+        return grupoMapper.toDto(grupo);
     }
 
     @PutMapping("/{grupoId}")
@@ -57,7 +57,7 @@ public class GrupoController {
 
         grupoAtual = cadastroGrupo.salvar(grupoAtual);
 
-        return grupoMapper.toModel(grupoAtual);
+        return grupoMapper.toDto(grupoAtual);
     }
 
     @DeleteMapping("/{grupoId}")

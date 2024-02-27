@@ -2,8 +2,8 @@ package dev.hugofaria.algafood.api.controller;
 
 
 import dev.hugofaria.algafood.api.mapper.EstadoMapper;
-import dev.hugofaria.algafood.api.model.EstadoDTO;
-import dev.hugofaria.algafood.api.model.input.EstadoInput;
+import dev.hugofaria.algafood.api.dto.EstadoDTO;
+import dev.hugofaria.algafood.api.dto.input.EstadoInput;
 import dev.hugofaria.algafood.domain.model.Estado;
 import dev.hugofaria.algafood.domain.repository.EstadoRepository;
 import dev.hugofaria.algafood.domain.service.CadastroEstadoService;
@@ -36,7 +36,7 @@ public class EstadoController {
     public EstadoDTO buscar(@PathVariable Long estadoId) {
         Estado estado = cadastroEstado.buscarOuFalhar(estadoId);
 
-        return estadoMapper.toModel(estado);
+        return estadoMapper.toDto(estado);
     }
 
     @PostMapping
@@ -46,7 +46,7 @@ public class EstadoController {
 
         estado = cadastroEstado.salvar(estado);
 
-        return estadoMapper.toModel(estado);
+        return estadoMapper.toDto(estado);
     }
 
     @PutMapping("/{estadoId}")
@@ -57,7 +57,7 @@ public class EstadoController {
 
         estadoAtual = cadastroEstado.salvar(estadoAtual);
 
-        return estadoMapper.toModel(estadoAtual);
+        return estadoMapper.toDto(estadoAtual);
     }
 
     @DeleteMapping("/{estadoId}")

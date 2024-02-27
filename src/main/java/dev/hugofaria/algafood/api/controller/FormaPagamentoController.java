@@ -1,8 +1,8 @@
 package dev.hugofaria.algafood.api.controller;
 
 import dev.hugofaria.algafood.api.mapper.FormaPagamentoMapper;
-import dev.hugofaria.algafood.api.model.FormaPagamentoDTO;
-import dev.hugofaria.algafood.api.model.input.FormaPagamentoInput;
+import dev.hugofaria.algafood.api.dto.FormaPagamentoDTO;
+import dev.hugofaria.algafood.api.dto.input.FormaPagamentoInput;
 import dev.hugofaria.algafood.domain.model.FormaPagamento;
 import dev.hugofaria.algafood.domain.repository.FormaPagamentoRepository;
 import dev.hugofaria.algafood.domain.service.CadastroFormaPagamentoService;
@@ -35,7 +35,7 @@ public class FormaPagamentoController {
     public FormaPagamentoDTO buscar(@PathVariable Long formaPagamentoId) {
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
 
-        return formaPagamentoMapper.toModel(formaPagamento);
+        return formaPagamentoMapper.toDto(formaPagamento);
     }
 
     @PostMapping
@@ -45,7 +45,7 @@ public class FormaPagamentoController {
 
         formaPagamento = cadastroFormaPagamento.salvar(formaPagamento);
 
-        return formaPagamentoMapper.toModel(formaPagamento);
+        return formaPagamentoMapper.toDto(formaPagamento);
     }
 
     @PutMapping("/{formaPagamentoId}")
@@ -56,7 +56,7 @@ public class FormaPagamentoController {
 
         formaPagamentoAtual = cadastroFormaPagamento.salvar(formaPagamentoAtual);
 
-        return formaPagamentoMapper.toModel(formaPagamentoAtual);
+        return formaPagamentoMapper.toDto(formaPagamentoAtual);
     }
 
     @DeleteMapping("/{formaPagamentoId}")

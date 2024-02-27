@@ -1,9 +1,9 @@
 package dev.hugofaria.algafood.api.controller;
 
 
+import dev.hugofaria.algafood.api.dto.CidadeDTO;
+import dev.hugofaria.algafood.api.dto.input.CidadeInput;
 import dev.hugofaria.algafood.api.mapper.CidadeMapper;
-import dev.hugofaria.algafood.api.model.CidadeDTO;
-import dev.hugofaria.algafood.api.model.input.CidadeInput;
 import dev.hugofaria.algafood.domain.exception.EstadoNaoEncontradoException;
 import dev.hugofaria.algafood.domain.exception.NegocioException;
 import dev.hugofaria.algafood.domain.model.Cidade;
@@ -38,7 +38,7 @@ public class CidadeController {
     public CidadeDTO buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
-        return cidadeMapper.toModel(cidade);
+        return cidadeMapper.toDto(cidade);
     }
 
     @PostMapping
@@ -49,7 +49,7 @@ public class CidadeController {
 
             cidade = cadastroCidade.salvar(cidade);
 
-            return cidadeMapper.toModel(cidade);
+            return cidadeMapper.toDto(cidade);
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
@@ -65,7 +65,7 @@ public class CidadeController {
 
             cidadeAtual = cadastroCidade.salvar(cidadeAtual);
 
-            return cidadeMapper.toModel(cidadeAtual);
+            return cidadeMapper.toDto(cidadeAtual);
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }

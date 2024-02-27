@@ -5,22 +5,21 @@ import dev.hugofaria.algafood.domain.exception.EntidadeEmUsoException;
 import dev.hugofaria.algafood.domain.model.Cidade;
 import dev.hugofaria.algafood.domain.model.Estado;
 import dev.hugofaria.algafood.domain.repository.CidadeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class CadastroCidadeService {
 
     private static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
 
-    @Autowired
-    private CidadeRepository cidadeRepository;
+    private final CidadeRepository cidadeRepository;
 
-    @Autowired
-    private CadastroEstadoService cadastroEstado;
+    private final CadastroEstadoService cadastroEstado;
 
     @Transactional
     public Cidade salvar(Cidade cidade) {

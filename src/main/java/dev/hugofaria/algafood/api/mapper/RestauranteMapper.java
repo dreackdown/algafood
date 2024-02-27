@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.mapper;
 
-import dev.hugofaria.algafood.api.model.RestauranteDTO;
-import dev.hugofaria.algafood.api.model.input.RestauranteInput;
+import dev.hugofaria.algafood.api.dto.RestauranteDTO;
+import dev.hugofaria.algafood.api.dto.input.RestauranteInput;
 import dev.hugofaria.algafood.domain.model.Cidade;
 import dev.hugofaria.algafood.domain.model.Cozinha;
 import dev.hugofaria.algafood.domain.model.Restaurante;
@@ -18,13 +18,13 @@ public class RestauranteMapper {
 
     private final ModelMapper modelMapper;
 
-    public RestauranteDTO toModel(Restaurante restaurante) {
+    public RestauranteDTO toDto(Restaurante restaurante) {
         return modelMapper.map(restaurante, RestauranteDTO.class);
     }
 
     public List<RestauranteDTO> toCollectionModel(List<Restaurante> restaurantes) {
         return restaurantes.stream()
-                .map(this::toModel)
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 

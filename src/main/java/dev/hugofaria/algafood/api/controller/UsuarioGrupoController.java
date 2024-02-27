@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.controller;
 
 import dev.hugofaria.algafood.api.mapper.GrupoMapper;
-import dev.hugofaria.algafood.api.model.GrupoDTO;
+import dev.hugofaria.algafood.api.dto.GrupoDTO;
 import dev.hugofaria.algafood.domain.model.Usuario;
 import dev.hugofaria.algafood.domain.service.CadastroUsuarioService;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package dev.hugofaria.algafood.api.model;
+package dev.hugofaria.algafood.api.dto;
 
 import lombok.Getter;
 import lombok.Setter;

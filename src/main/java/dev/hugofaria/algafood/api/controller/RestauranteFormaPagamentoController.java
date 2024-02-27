@@ -2,7 +2,7 @@ package dev.hugofaria.algafood.api.controller;
 
 
 import dev.hugofaria.algafood.api.mapper.FormaPagamentoMapper;
-import dev.hugofaria.algafood.api.model.FormaPagamentoDTO;
+import dev.hugofaria.algafood.api.dto.FormaPagamentoDTO;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import dev.hugofaria.algafood.domain.service.CadastroRestauranteService;
 import lombok.AllArgsConstructor;

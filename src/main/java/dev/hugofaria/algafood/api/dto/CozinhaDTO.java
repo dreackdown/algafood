@@ -1,13 +1,12 @@
-package dev.hugofaria.algafood.api.model;
+package dev.hugofaria.algafood.api.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class GrupoDTO {
+public class CozinhaDTO {
 
     private Long id;
     private String nome;
-    
 }

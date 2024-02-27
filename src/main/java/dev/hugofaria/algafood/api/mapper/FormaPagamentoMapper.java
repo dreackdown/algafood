@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.mapper;
 
-import dev.hugofaria.algafood.api.model.FormaPagamentoDTO;
-import dev.hugofaria.algafood.api.model.input.FormaPagamentoInput;
+import dev.hugofaria.algafood.api.dto.FormaPagamentoDTO;
+import dev.hugofaria.algafood.api.dto.input.FormaPagamentoInput;
 import dev.hugofaria.algafood.domain.model.FormaPagamento;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,13 +17,13 @@ public class FormaPagamentoMapper {
 
     private final ModelMapper modelMapper;
 
-    public FormaPagamentoDTO toModel(FormaPagamento formaPagamento) {
+    public FormaPagamentoDTO toDto(FormaPagamento formaPagamento) {
         return modelMapper.map(formaPagamento, FormaPagamentoDTO.class);
     }
 
     public List<FormaPagamentoDTO> toCollectionModel(Collection<FormaPagamento> formasPagamentos) {
         return formasPagamentos.stream()
-                .map(this::toModel)
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 

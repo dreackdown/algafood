@@ -2,14 +2,12 @@ package dev.hugofaria.algafood.api.controller;
 
 
 import dev.hugofaria.algafood.api.mapper.CozinhaMapper;
-import dev.hugofaria.algafood.api.model.CozinhaDTO;
-import dev.hugofaria.algafood.api.model.input.CozinhaInput;
+import dev.hugofaria.algafood.api.dto.CozinhaDTO;
+import dev.hugofaria.algafood.api.dto.input.CozinhaInput;
 import dev.hugofaria.algafood.domain.model.Cozinha;
 import dev.hugofaria.algafood.domain.repository.CozinhaRepository;
 import dev.hugofaria.algafood.domain.service.CadastroCozinhaService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +36,7 @@ public class CozinhaController {
     public CozinhaDTO buscar(@PathVariable Long cozinhaId) {
         Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
 
-        return cozinhaMapper.toModel(cozinha);
+        return cozinhaMapper.toDto(cozinha);
     }
 
     @PostMapping
@@ -47,7 +45,7 @@ public class CozinhaController {
         Cozinha cozinha = cozinhaMapper.toDomainObject(cozinhaInput);
         cozinha = cadastroCozinha.salvar(cozinha);
 
-        return cozinhaMapper.toModel(cozinha);
+        return cozinhaMapper.toDto(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
@@ -57,7 +55,7 @@ public class CozinhaController {
         cozinhaMapper.copyToDomainObject(cozinhaInput, cozinhaAtual);
         cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
 
-        return cozinhaMapper.toModel(cozinhaAtual);
+        return cozinhaMapper.toDto(cozinhaAtual);
     }
 
     @DeleteMapping("/{cozinhaId}")

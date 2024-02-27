@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.mapper;
 
-import dev.hugofaria.algafood.api.model.GrupoDTO;
-import dev.hugofaria.algafood.api.model.input.GrupoInput;
+import dev.hugofaria.algafood.api.dto.GrupoDTO;
+import dev.hugofaria.algafood.api.dto.input.GrupoInput;
 import dev.hugofaria.algafood.domain.model.Grupo;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,13 +17,13 @@ public class GrupoMapper {
 
     private final ModelMapper modelMapper;
 
-    public GrupoDTO toModel(Grupo grupo) {
+    public GrupoDTO toDto(Grupo grupo) {
         return modelMapper.map(grupo, GrupoDTO.class);
     }
 
     public List<GrupoDTO> toCollectionModel(Collection<Grupo> grupos) {
         return grupos.stream()
-                .map(this::toModel)
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
