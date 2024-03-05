@@ -1,6 +1,7 @@
 package dev.hugofaria.algafood.api.mapper;
 
 import dev.hugofaria.algafood.api.dto.PedidoDTO;
+import dev.hugofaria.algafood.api.dto.input.PedidoInput;
 import dev.hugofaria.algafood.domain.model.Pedido;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,5 +24,13 @@ public class PedidoMapper {
         return pedidos.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public Pedido toDomainObject(PedidoInput pedidoInput) {
+        return modelMapper.map(pedidoInput, Pedido.class);
+    }
+
+    public void copyToDomainObject(PedidoInput pedidoInput, Pedido pedido) {
+        modelMapper.map(pedidoInput, pedido);
     }
 }
