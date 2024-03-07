@@ -14,6 +14,10 @@ import dev.hugofaria.algafood.domain.repository.filter.PedidoFilter;
 import dev.hugofaria.algafood.domain.service.EmissaoPedidoService;
 import dev.hugofaria.algafood.infrastructure.repository.spec.PedidoSpecs;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,10 +38,12 @@ public class PedidoController {
     private final PedidoResumoMapper pedidoResumoMapper;
 
     @GetMapping
-    public List<PedidoResumoDTO> pesquisar(PedidoFilter filtro) {
-        List<Pedido> todosPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
+    public Page<PedidoResumoDTO> pesquisar(@PageableDefault(size = 10) PedidoFilter filtro, Pageable paginacao) {
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), paginacao);
 
-        return pedidoResumoMapper.toCollectionModel(todosPedidos);
+        List<PedidoResumoDTO> pedidosDto = pedidoResumoMapper.toCollectionModel(pedidosPage.getContent());
+
+        return new PageImpl<>(pedidosDto, paginacao, pedidosPage.getTotalElements());
     }
 
     @PostMapping

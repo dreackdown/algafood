@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface CozinhaRepository extends CustomJpaRepository<Cozinha, Long> {
 
     List<Cozinha> findTodasByNomeContaining(String nome);
+    //Page<Cozinha> findTodasByNomeContaining(String nome, Pageable paginacao);
 
     Optional<Cozinha> findByNome(String nome);
 
