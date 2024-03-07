@@ -10,7 +10,9 @@ import dev.hugofaria.algafood.domain.exception.NegocioException;
 import dev.hugofaria.algafood.domain.model.Pedido;
 import dev.hugofaria.algafood.domain.model.Usuario;
 import dev.hugofaria.algafood.domain.repository.PedidoRepository;
+import dev.hugofaria.algafood.domain.repository.filter.PedidoFilter;
 import dev.hugofaria.algafood.domain.service.EmissaoPedidoService;
+import dev.hugofaria.algafood.infrastructure.repository.spec.PedidoSpecs;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +34,8 @@ public class PedidoController {
     private final PedidoResumoMapper pedidoResumoMapper;
 
     @GetMapping
-    public List<PedidoResumoDTO> listar() {
-        List<Pedido> todosPedidos = pedidoRepository.findAll();
+    public List<PedidoResumoDTO> pesquisar(PedidoFilter filtro) {
+        List<Pedido> todosPedidos = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro));
 
         return pedidoResumoMapper.toCollectionModel(todosPedidos);
     }
