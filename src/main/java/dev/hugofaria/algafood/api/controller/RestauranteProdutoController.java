@@ -1,8 +1,8 @@
 package dev.hugofaria.algafood.api.controller;
 
-import dev.hugofaria.algafood.api.mapper.ProdutoMapper;
 import dev.hugofaria.algafood.api.dto.ProdutoDTO;
 import dev.hugofaria.algafood.api.dto.input.ProdutoInput;
+import dev.hugofaria.algafood.api.mapper.ProdutoMapper;
 import dev.hugofaria.algafood.domain.model.Produto;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import dev.hugofaria.algafood.domain.repository.ProdutoRepository;
@@ -29,10 +29,18 @@ public class RestauranteProdutoController {
     private final ProdutoMapper produtoMapper;
 
     @GetMapping
-    public List<ProdutoDTO> listar(@PathVariable Long restauranteId) {
+    public List<ProdutoDTO> listar(
+            @PathVariable Long restauranteId,
+            @RequestParam(required = false) boolean incluirinativos) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        List<Produto> todosProdutos = produtoRepository.findByRestaurante(restaurante);
+        List<Produto> todosProdutos = null;
+
+        if (incluirinativos) {
+            todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
+        } else {
+            todosProdutos = produtoRepository.findAtivosByRestaurante(restaurante);
+        }
 
         return produtoMapper.toCollectionModel(todosProdutos);
     }
