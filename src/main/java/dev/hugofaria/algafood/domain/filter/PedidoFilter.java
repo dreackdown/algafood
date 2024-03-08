@@ -1,4 +1,4 @@
-package dev.hugofaria.algafood.domain.repository.filter;
+package dev.hugofaria.algafood.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;
