@@ -2,7 +2,7 @@ package dev.hugofaria.algafood.api.controller;
 
 
 import dev.hugofaria.algafood.api.mapper.FormaPagamentoMapper;
-import dev.hugofaria.algafood.api.dto.FormaPagamentoDTO;
+import dev.hugofaria.algafood.api.model.FormaPagamentoModel;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import dev.hugofaria.algafood.domain.service.CadastroRestauranteService;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class RestauranteFormaPagamentoController {
     private final FormaPagamentoMapper formaPagamentoMapper;
 
     @GetMapping
-    public List<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
+    public List<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
         return formaPagamentoMapper.toCollectionModel(restaurante.getFormasPagamento());

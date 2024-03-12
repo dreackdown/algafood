@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.controller;
 
-import dev.hugofaria.algafood.api.dto.ProdutoDTO;
-import dev.hugofaria.algafood.api.dto.input.ProdutoInput;
+import dev.hugofaria.algafood.api.model.ProdutoModel;
+import dev.hugofaria.algafood.api.model.input.ProdutoInput;
 import dev.hugofaria.algafood.api.mapper.ProdutoMapper;
 import dev.hugofaria.algafood.domain.model.Produto;
 import dev.hugofaria.algafood.domain.model.Restaurante;
@@ -29,7 +29,7 @@ public class RestauranteProdutoController {
     private final ProdutoMapper produtoMapper;
 
     @GetMapping
-    public List<ProdutoDTO> listar(
+    public List<ProdutoModel> listar(
             @PathVariable Long restauranteId,
             @RequestParam(required = false) boolean incluirinativos) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
@@ -46,15 +46,15 @@ public class RestauranteProdutoController {
     }
 
     @GetMapping("/{produtoId}")
-    public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
+    public ProdutoModel buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         Produto produto = cadastroProduto.buscarOuFalhar(restauranteId, produtoId);
 
-        return produtoMapper.toDto(produto);
+        return produtoMapper.toModel(produto);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProdutoDTO adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
+    public ProdutoModel adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
         Produto produto = produtoMapper.toDomainObject(produtoInput);
@@ -62,17 +62,17 @@ public class RestauranteProdutoController {
 
         produto = cadastroProduto.salvar(produto);
 
-        return produtoMapper.toDto(produto);
+        return produtoMapper.toModel(produto);
     }
 
     @PutMapping("/{produtoId}")
-    public ProdutoDTO atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInput produtoInput) {
+    public ProdutoModel atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInput produtoInput) {
         Produto produtoAtual = cadastroProduto.buscarOuFalhar(restauranteId, produtoId);
 
         produtoMapper.copyToDomainObject(produtoInput, produtoAtual);
 
         produtoAtual = cadastroProduto.salvar(produtoAtual);
 
-        return produtoMapper.toDto(produtoAtual);
+        return produtoMapper.toModel(produtoAtual);
     }
 }

@@ -1,8 +1,8 @@
 package dev.hugofaria.algafood.api.controller;
 
 
-import dev.hugofaria.algafood.api.dto.CidadeDTO;
-import dev.hugofaria.algafood.api.dto.input.CidadeInput;
+import dev.hugofaria.algafood.api.model.CidadeModel;
+import dev.hugofaria.algafood.api.model.input.CidadeInput;
 import dev.hugofaria.algafood.api.mapper.CidadeMapper;
 import dev.hugofaria.algafood.domain.exception.EstadoNaoEncontradoException;
 import dev.hugofaria.algafood.domain.exception.NegocioException;
@@ -28,36 +28,36 @@ public class CidadeController {
     private final CidadeMapper cidadeMapper;
 
     @GetMapping
-    public List<CidadeDTO> listar() {
+    public List<CidadeModel> listar() {
         List<Cidade> todasCidades = cidadeRepository.findAll();
 
         return cidadeMapper.toCollectionModel(todasCidades);
     }
 
     @GetMapping("/{cidadeId}")
-    public CidadeDTO buscar(@PathVariable Long cidadeId) {
+    public CidadeModel buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
-        return cidadeMapper.toDto(cidade);
+        return cidadeMapper.toModel(cidade);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CidadeDTO adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
+    public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
         try {
             Cidade cidade = cidadeMapper.toDomainObject(cidadeInput);
 
             cidade = cadastroCidade.salvar(cidade);
 
-            return cidadeMapper.toDto(cidade);
+            return cidadeMapper.toModel(cidade);
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{cidadeId}")
-    public CidadeDTO atualizar(@PathVariable Long cidadeId,
-                               @RequestBody @Valid CidadeInput cidadeInput) {
+    public CidadeModel atualizar(@PathVariable Long cidadeId,
+                                 @RequestBody @Valid CidadeInput cidadeInput) {
         try {
             Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
 
@@ -65,7 +65,7 @@ public class CidadeController {
 
             cidadeAtual = cadastroCidade.salvar(cidadeAtual);
 
-            return cidadeMapper.toDto(cidadeAtual);
+            return cidadeMapper.toModel(cidadeAtual);
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }

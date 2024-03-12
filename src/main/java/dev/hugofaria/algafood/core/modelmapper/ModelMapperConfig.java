@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.core.modelmapper;
 
-import dev.hugofaria.algafood.api.dto.EnderecoDTO;
-import dev.hugofaria.algafood.api.dto.input.ItemPedidoInput;
+import dev.hugofaria.algafood.api.model.EnderecoModel;
+import dev.hugofaria.algafood.api.model.input.ItemPedidoInput;
 import dev.hugofaria.algafood.domain.model.Endereco;
 import dev.hugofaria.algafood.domain.model.ItemPedido;
 import org.modelmapper.ModelMapper;
@@ -22,7 +22,7 @@ public class ModelMapperConfig {
                 .addMappings(mapper -> mapper.skip(ItemPedido::setId));
 
         var enderecoToEnderecoModelTypeMap = modelMapper.createTypeMap(
-                Endereco.class, EnderecoDTO.class);
+                Endereco.class, EnderecoModel.class);
 
         enderecoToEnderecoModelTypeMap.<String>addMapping(
                 enderecoSrc -> enderecoSrc.getCidade().getEstado().getNome(),

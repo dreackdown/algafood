@@ -1,6 +1,6 @@
 package dev.hugofaria.algafood.api.mapper;
 
-import dev.hugofaria.algafood.api.dto.PermissaoDTO;
+import dev.hugofaria.algafood.api.model.PermissaoModel;
 import dev.hugofaria.algafood.domain.model.Permissao;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,13 +16,13 @@ public class PermissaoMapper {
 
     private final ModelMapper modelMapper;
 
-    public PermissaoDTO toDto(Permissao permissao) {
-        return modelMapper.map(permissao, PermissaoDTO.class);
+    public PermissaoModel toModel(Permissao permissao) {
+        return modelMapper.map(permissao, PermissaoModel.class);
     }
 
-    public List<PermissaoDTO> toCollectionModel(Collection<Permissao> permissoes) {
+    public List<PermissaoModel> toCollectionModel(Collection<Permissao> permissoes) {
         return permissoes.stream()
-                .map(this::toDto)
+                .map(this::toModel)
                 .collect(Collectors.toList());
     }
 }

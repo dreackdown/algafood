@@ -1,8 +1,8 @@
 package dev.hugofaria.algafood.api.controller;
 
 import dev.hugofaria.algafood.api.mapper.GrupoMapper;
-import dev.hugofaria.algafood.api.dto.GrupoDTO;
-import dev.hugofaria.algafood.api.dto.input.GrupoInput;
+import dev.hugofaria.algafood.api.model.GrupoModel;
+import dev.hugofaria.algafood.api.model.input.GrupoInput;
 import dev.hugofaria.algafood.domain.model.Grupo;
 import dev.hugofaria.algafood.domain.repository.GrupoRepository;
 import dev.hugofaria.algafood.domain.service.CadastroGrupoService;
@@ -25,39 +25,39 @@ public class GrupoController {
     private final GrupoMapper grupoMapper;
 
     @GetMapping
-    public List<GrupoDTO> listar() {
+    public List<GrupoModel> listar() {
         List<Grupo> todosGrupos = grupoRepository.findAll();
 
         return grupoMapper.toCollectionModel(todosGrupos);
     }
 
     @GetMapping("/{grupoId}")
-    public GrupoDTO buscar(@PathVariable Long grupoId) {
+    public GrupoModel buscar(@PathVariable Long grupoId) {
         Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
 
-        return grupoMapper.toDto(grupo);
+        return grupoMapper.toModel(grupo);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GrupoDTO adicionar(@RequestBody @Valid GrupoInput grupoInput) {
+    public GrupoModel adicionar(@RequestBody @Valid GrupoInput grupoInput) {
         Grupo grupo = grupoMapper.toDomainObject(grupoInput);
 
         grupo = cadastroGrupo.salvar(grupo);
 
-        return grupoMapper.toDto(grupo);
+        return grupoMapper.toModel(grupo);
     }
 
     @PutMapping("/{grupoId}")
-    public GrupoDTO atualizar(@PathVariable Long grupoId,
-                              @RequestBody @Valid GrupoInput grupoInput) {
+    public GrupoModel atualizar(@PathVariable Long grupoId,
+                                @RequestBody @Valid GrupoInput grupoInput) {
         Grupo grupoAtual = cadastroGrupo.buscarOuFalhar(grupoId);
 
         grupoMapper.copyToDomainObject(grupoInput, grupoAtual);
 
         grupoAtual = cadastroGrupo.salvar(grupoAtual);
 
-        return grupoMapper.toDto(grupoAtual);
+        return grupoMapper.toModel(grupoAtual);
     }
 
     @DeleteMapping("/{grupoId}")

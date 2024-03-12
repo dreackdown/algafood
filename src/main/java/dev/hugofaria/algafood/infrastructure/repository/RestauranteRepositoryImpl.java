@@ -29,8 +29,7 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
     private RestauranteRepository restauranteRepository;
 
     @Override
-    public List<Restaurante> find(String nome,
-                                  BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
+    public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
         var builder = manager.getCriteriaBuilder();
 
         var criteria = builder.createQuery(Restaurante.class);

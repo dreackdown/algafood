@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.mapper;
 
-import dev.hugofaria.algafood.api.dto.CozinhaDTO;
-import dev.hugofaria.algafood.api.dto.input.CozinhaInput;
+import dev.hugofaria.algafood.api.model.CozinhaModel;
+import dev.hugofaria.algafood.api.model.input.CozinhaInput;
 import dev.hugofaria.algafood.domain.model.Cozinha;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,13 +16,13 @@ public class CozinhaMapper {
 
     private final ModelMapper modelMapper;
 
-    public CozinhaDTO toDto(Cozinha cozinha) {
-        return modelMapper.map(cozinha, CozinhaDTO.class);
+    public CozinhaModel toModel(Cozinha cozinha) {
+        return modelMapper.map(cozinha, CozinhaModel.class);
     }
 
-    public List<CozinhaDTO> toCollectionModel(List<Cozinha> cozinhas) {
+    public List<CozinhaModel> toCollectionModel(List<Cozinha> cozinhas) {
         return cozinhas.stream()
-                .map(this::toDto)
+                .map(this::toModel)
                 .collect(Collectors.toList());
     }
 

@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.infrastructure.repository.spec;
 
 import dev.hugofaria.algafood.domain.model.Pedido;
-import dev.hugofaria.algafood.domain.repository.filter.PedidoFilter;
+import dev.hugofaria.algafood.domain.filter.PedidoFilter;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;

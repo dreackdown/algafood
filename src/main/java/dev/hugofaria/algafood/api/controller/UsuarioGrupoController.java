@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.controller;
 
 import dev.hugofaria.algafood.api.mapper.GrupoMapper;
-import dev.hugofaria.algafood.api.dto.GrupoDTO;
+import dev.hugofaria.algafood.api.model.GrupoModel;
 import dev.hugofaria.algafood.domain.model.Usuario;
 import dev.hugofaria.algafood.domain.service.CadastroUsuarioService;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class UsuarioGrupoController {
     private final GrupoMapper grupoMapper;
 
     @GetMapping
-    public List<GrupoDTO> listar(@PathVariable Long usuarioId) {
+    public List<GrupoModel> listar(@PathVariable Long usuarioId) {
         Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
 
         return grupoMapper.toCollectionModel(usuario.getGrupos());

@@ -2,8 +2,8 @@ package dev.hugofaria.algafood.api.controller;
 
 
 import dev.hugofaria.algafood.api.mapper.EstadoMapper;
-import dev.hugofaria.algafood.api.dto.EstadoDTO;
-import dev.hugofaria.algafood.api.dto.input.EstadoInput;
+import dev.hugofaria.algafood.api.model.EstadoModel;
+import dev.hugofaria.algafood.api.model.input.EstadoInput;
 import dev.hugofaria.algafood.domain.model.Estado;
 import dev.hugofaria.algafood.domain.repository.EstadoRepository;
 import dev.hugofaria.algafood.domain.service.CadastroEstadoService;
@@ -26,38 +26,38 @@ public class EstadoController {
     private final EstadoMapper estadoMapper;
 
     @GetMapping
-    public List<EstadoDTO> listar() {
+    public List<EstadoModel> listar() {
         List<Estado> todosEstados = estadoRepository.findAll();
 
         return estadoMapper.toCollectionModel(todosEstados);
     }
 
     @GetMapping("/{estadoId}")
-    public EstadoDTO buscar(@PathVariable Long estadoId) {
+    public EstadoModel buscar(@PathVariable Long estadoId) {
         Estado estado = cadastroEstado.buscarOuFalhar(estadoId);
 
-        return estadoMapper.toDto(estado);
+        return estadoMapper.toModel(estado);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EstadoDTO adicionar(@RequestBody @Valid EstadoInput estadoInput) {
+    public EstadoModel adicionar(@RequestBody @Valid EstadoInput estadoInput) {
         Estado estado = estadoMapper.toDomainObject(estadoInput);
 
         estado = cadastroEstado.salvar(estado);
 
-        return estadoMapper.toDto(estado);
+        return estadoMapper.toModel(estado);
     }
 
     @PutMapping("/{estadoId}")
-    public EstadoDTO atualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInput estadoInput) {
+    public EstadoModel atualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInput estadoInput) {
         Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
 
         estadoMapper.copyToDomainObject(estadoInput, estadoAtual);
 
         estadoAtual = cadastroEstado.salvar(estadoAtual);
 
-        return estadoMapper.toDto(estadoAtual);
+        return estadoMapper.toModel(estadoAtual);
     }
 
     @DeleteMapping("/{estadoId}")

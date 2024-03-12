@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.controller;
 
 import dev.hugofaria.algafood.api.mapper.PermissaoMapper;
-import dev.hugofaria.algafood.api.dto.PermissaoDTO;
+import dev.hugofaria.algafood.api.model.PermissaoModel;
 import dev.hugofaria.algafood.domain.model.Grupo;
 import dev.hugofaria.algafood.domain.service.CadastroGrupoService;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class GrupoPermissaoController {
     private final PermissaoMapper permissaoModelAssembler;
 
     @GetMapping
-    public List<PermissaoDTO> listar(@PathVariable Long grupoId) {
+    public List<PermissaoModel> listar(@PathVariable Long grupoId) {
         Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
 
         return permissaoModelAssembler.toCollectionModel(grupo.getPermissoes());

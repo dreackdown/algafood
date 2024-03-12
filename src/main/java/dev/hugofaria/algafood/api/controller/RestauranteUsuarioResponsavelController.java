@@ -2,7 +2,7 @@ package dev.hugofaria.algafood.api.controller;
 
 
 import dev.hugofaria.algafood.api.mapper.UsuarioMapper;
-import dev.hugofaria.algafood.api.dto.UsuarioDTO;
+import dev.hugofaria.algafood.api.model.UsuarioModel;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import dev.hugofaria.algafood.domain.service.CadastroRestauranteService;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class RestauranteUsuarioResponsavelController {
     private final UsuarioMapper usuarioMapper;
 
     @GetMapping
-    public List<UsuarioDTO> listar(@PathVariable Long restauranteId) {
+    public List<UsuarioModel> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
         return usuarioMapper.toCollectionModel(restaurante.getResponsaveis());

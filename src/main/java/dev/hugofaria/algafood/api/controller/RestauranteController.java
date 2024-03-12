@@ -2,8 +2,8 @@ package dev.hugofaria.algafood.api.controller;
 
 
 import dev.hugofaria.algafood.api.mapper.RestauranteMapper;
-import dev.hugofaria.algafood.api.dto.RestauranteDTO;
-import dev.hugofaria.algafood.api.dto.input.RestauranteInput;
+import dev.hugofaria.algafood.api.model.RestauranteModel;
+import dev.hugofaria.algafood.api.model.input.RestauranteInput;
 import dev.hugofaria.algafood.domain.exception.CidadeNaoEncontradaException;
 import dev.hugofaria.algafood.domain.exception.CozinhaNaoEncontradaException;
 import dev.hugofaria.algafood.domain.exception.NegocioException;
@@ -30,37 +30,37 @@ public class RestauranteController {
     private final RestauranteMapper restauranteMapper;
 
     @GetMapping
-    public List<RestauranteDTO> listar() {
+    public List<RestauranteModel> listar() {
         return restauranteMapper.toCollectionModel(restauranteRepository.findAll());
     }
 
     @GetMapping("/{restauranteId}")
-    public RestauranteDTO buscar(@PathVariable Long restauranteId) {
+    public RestauranteModel buscar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        return restauranteMapper.toDto(restaurante);
+        return restauranteMapper.toModel(restaurante);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RestauranteDTO adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
+    public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
         try {
             Restaurante restaurante = restauranteMapper.toDomainObject(restauranteInput);
 
-            return restauranteMapper.toDto(cadastroRestaurante.salvar(restaurante));
+            return restauranteMapper.toModel(cadastroRestaurante.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
 
     @PutMapping("/{restauranteId}")
-    public RestauranteDTO atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {
+    public RestauranteModel atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {
         try {
             Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
             restauranteMapper.copyToDomainObject(restauranteInput, restauranteAtual);
 
-            return restauranteMapper.toDto(cadastroRestaurante.salvar(restauranteAtual));
+            return restauranteMapper.toModel(cadastroRestaurante.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }

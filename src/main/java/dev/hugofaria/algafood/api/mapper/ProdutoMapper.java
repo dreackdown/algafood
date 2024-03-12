@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.mapper;
 
-import dev.hugofaria.algafood.api.dto.ProdutoDTO;
-import dev.hugofaria.algafood.api.dto.input.ProdutoInput;
+import dev.hugofaria.algafood.api.model.ProdutoModel;
+import dev.hugofaria.algafood.api.model.input.ProdutoInput;
 import dev.hugofaria.algafood.domain.model.Produto;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,13 +16,13 @@ public class ProdutoMapper {
 
     private final ModelMapper modelMapper;
 
-    public ProdutoDTO toDto(Produto produto) {
-        return modelMapper.map(produto, ProdutoDTO.class);
+    public ProdutoModel toModel(Produto produto) {
+        return modelMapper.map(produto, ProdutoModel.class);
     }
 
-    public List<ProdutoDTO> toCollectionModel(List<Produto> produtos) {
+    public List<ProdutoModel> toCollectionModel(List<Produto> produtos) {
         return produtos.stream()
-                .map(this::toDto)
+                .map(this::toModel)
                 .collect(Collectors.toList());
     }
 

@@ -1,8 +1,8 @@
 package dev.hugofaria.algafood.api.controller;
 
 
-import dev.hugofaria.algafood.api.dto.CozinhaDTO;
-import dev.hugofaria.algafood.api.dto.input.CozinhaInput;
+import dev.hugofaria.algafood.api.model.CozinhaModel;
+import dev.hugofaria.algafood.api.model.input.CozinhaInput;
 import dev.hugofaria.algafood.api.mapper.CozinhaMapper;
 import dev.hugofaria.algafood.domain.model.Cozinha;
 import dev.hugofaria.algafood.domain.repository.CozinhaRepository;
@@ -30,38 +30,38 @@ public class CozinhaController {
     private final CozinhaMapper cozinhaMapper;
 
     @GetMapping
-    public Page<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable paginacao) {
+    public Page<CozinhaModel> listar(@PageableDefault(size = 10) Pageable paginacao) {
         Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(paginacao);
 
-        List<CozinhaDTO> cozinhasDto = cozinhaMapper.toCollectionModel(cozinhasPage.getContent());
+        List<CozinhaModel> cozinhasDto = cozinhaMapper.toCollectionModel(cozinhasPage.getContent());
 
         return new PageImpl<>(cozinhasDto, paginacao, cozinhasPage.getTotalElements());
     }
 
     @GetMapping("/{cozinhaId}")
-    public CozinhaDTO buscar(@PathVariable Long cozinhaId) {
+    public CozinhaModel buscar(@PathVariable Long cozinhaId) {
         Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
 
-        return cozinhaMapper.toDto(cozinha);
+        return cozinhaMapper.toModel(cozinha);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
+    public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
         Cozinha cozinha = cozinhaMapper.toDomainObject(cozinhaInput);
         cozinha = cadastroCozinha.salvar(cozinha);
 
-        return cozinhaMapper.toDto(cozinha);
+        return cozinhaMapper.toModel(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
-    public CozinhaDTO atualizar(@PathVariable Long cozinhaId,
-                                @RequestBody @Valid CozinhaInput cozinhaInput) {
+    public CozinhaModel atualizar(@PathVariable Long cozinhaId,
+                                  @RequestBody @Valid CozinhaInput cozinhaInput) {
         Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
         cozinhaMapper.copyToDomainObject(cozinhaInput, cozinhaAtual);
         cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
 
-        return cozinhaMapper.toDto(cozinhaAtual);
+        return cozinhaMapper.toModel(cozinhaAtual);
     }
 
     @DeleteMapping("/{cozinhaId}")

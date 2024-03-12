@@ -1,7 +1,7 @@
 package dev.hugofaria.algafood.api.mapper;
 
-import dev.hugofaria.algafood.api.dto.EstadoDTO;
-import dev.hugofaria.algafood.api.dto.input.EstadoInput;
+import dev.hugofaria.algafood.api.model.EstadoModel;
+import dev.hugofaria.algafood.api.model.input.EstadoInput;
 import dev.hugofaria.algafood.domain.model.Estado;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,13 +16,13 @@ public class EstadoMapper {
 
     private final ModelMapper modelMapper;
 
-    public EstadoDTO toDto(Estado estado) {
-        return modelMapper.map(estado, EstadoDTO.class);
+    public EstadoModel toModel(Estado estado) {
+        return modelMapper.map(estado, EstadoModel.class);
     }
 
-    public List<EstadoDTO> toCollectionModel(List<Estado> estados) {
+    public List<EstadoModel> toCollectionModel(List<Estado> estados) {
         return estados.stream()
-                .map(this::toDto)
+                .map(this::toModel)
                 .collect(Collectors.toList());
     }
 
