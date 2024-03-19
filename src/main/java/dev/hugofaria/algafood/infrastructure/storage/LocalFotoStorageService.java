@@ -1,7 +1,8 @@
 package dev.hugofaria.algafood.infrastructure.storage;
 
+import dev.hugofaria.algafood.core.storage.StorageProperties;
 import dev.hugofaria.algafood.domain.service.FotoStorageService;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
@@ -9,11 +10,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@AllArgsConstructor
 @Service
 public class LocalFotoStorageService implements FotoStorageService {
 
-    @Value("${algafood.storage.local.diretorio-fotos}")
-    private Path diretorioFotos;
+    private final StorageProperties storageProperties;
 
     @Override
     public InputStream recuperar(String nomeArquivo) {
@@ -50,7 +51,6 @@ public class LocalFotoStorageService implements FotoStorageService {
     }
 
     private Path getArquivoPath(String nomeArquivo) {
-        return diretorioFotos.resolve(Path.of(nomeArquivo));
+        return storageProperties.getLocal().getDiretorioFotos().resolve(Path.of(nomeArquivo));
     }
-
 }
