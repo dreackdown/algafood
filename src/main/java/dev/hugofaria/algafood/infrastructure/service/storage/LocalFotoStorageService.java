@@ -1,34 +1,35 @@
-package dev.hugofaria.algafood.infrastructure.storage;
+package dev.hugofaria.algafood.infrastructure.service.storage;
 
 import dev.hugofaria.algafood.core.storage.StorageProperties;
 import dev.hugofaria.algafood.domain.service.FotoStorageService;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@AllArgsConstructor
-@Service
 public class LocalFotoStorageService implements FotoStorageService {
 
-    private final StorageProperties storageProperties;
+    @Autowired
+    private StorageProperties storageProperties;
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
+    public FotoRecuperada recuperar(String nomeArquivo) {
         try {
             Path arquivoPath = getArquivoPath(nomeArquivo);
 
-            return Files.newInputStream(arquivoPath);
+            FotoRecuperada fotoRecuperada = FotoRecuperada.builder()
+                    .inputStream(Files.newInputStream(arquivoPath))
+                    .build();
+
+            return fotoRecuperada;
         } catch (Exception e) {
             throw new StorageException("Não foi possível recuperar arquivo.", e);
         }
     }
 
     @Override
-    public void armazenar(FotoStorageService.NovaFoto novaFoto) {
+    public void armazenar(NovaFoto novaFoto) {
         try {
             Path arquivoPath = getArquivoPath(novaFoto.getNomeAquivo());
 
@@ -51,6 +52,7 @@ public class LocalFotoStorageService implements FotoStorageService {
     }
 
     private Path getArquivoPath(String nomeArquivo) {
-        return storageProperties.getLocal().getDiretorioFotos().resolve(Path.of(nomeArquivo));
+        return storageProperties.getLocal().getDiretorioFotos()
+                .resolve(Path.of(nomeArquivo));
     }
 }

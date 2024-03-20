@@ -1,4 +1,4 @@
-package dev.hugofaria.algafood.infrastructure.storage;
+package dev.hugofaria.algafood.infrastructure.service.storage;
 
 public class StorageException extends RuntimeException {
 
