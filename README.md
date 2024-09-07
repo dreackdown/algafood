@@ -12,6 +12,7 @@ As seguintes tecnologias foram utilizadas no desenvolvimento da API Rest do proj
 - **[Maven](https://maven.apache.org)**
 - **[MySQL](https://www.mysql.com)**
 - **[Hibernate](https://hibernate.org)**
+- **[Amazon S3](https://aws.amazon.com/pt/s3/)**
 - **[Flyway](https://flywaydb.org)**
 - **[Lombok](https://projectlombok.org)**
 - **[ModelMapper](https://modelmapper.org)**

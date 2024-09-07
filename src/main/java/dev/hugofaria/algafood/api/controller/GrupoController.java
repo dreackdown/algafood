@@ -24,6 +24,7 @@ public class GrupoController {
 
     private final GrupoMapper grupoMapper;
 
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping
     public List<GrupoModel> listar() {
         List<Grupo> todosGrupos = grupoRepository.findAll();
