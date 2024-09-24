@@ -1,24 +1,32 @@
 package dev.hugofaria.algafood.domain.service;
 
-import dev.hugofaria.algafood.domain.exception.NegocioException;
 import dev.hugofaria.algafood.domain.model.Pedido;
-import dev.hugofaria.algafood.domain.model.StatusPedido;
+import dev.hugofaria.algafood.domain.service.EnvioEmailService.Mensagem;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.OffsetDateTime;
 
 @Service
 @AllArgsConstructor
 public class FluxoPedidoService {
 
-    private final EmissaoPedidoService emissaoPedido;
+    private EmissaoPedidoService emissaoPedido;
+
+    private EnvioEmailService envioEmail;
 
     @Transactional
     public void confirmar(String codigoPedido) {
         Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
         pedido.confirmar();
+
+        var mensagem = Mensagem.builder()
+                .assunto(pedido.getRestaurante().getNome() + " - Pedido confirmado")
+                .corpo("pedido-confirmado.html")
+                .variavel("pedido", pedido)
+                .destinatario(pedido.getCliente().getEmail())
+                .build();
+
+        envioEmail.enviar(mensagem);
     }
 
     @Transactional
