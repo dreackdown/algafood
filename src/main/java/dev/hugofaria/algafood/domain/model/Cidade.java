@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -25,10 +26,9 @@ public class Cidade {
     private String nome;
 
     @Valid
-    @ConvertGroup(to = Groups.EstadoId.class)
+    @ConvertGroup(from = Default.class, to = Groups.EstadoId.class)
     @NotNull
     @ManyToOne
     @JoinColumn(nullable = false)
     private Estado estado;
-
 }
