@@ -1,9 +1,10 @@
 package dev.hugofaria.algafood.api.controller;
 
 
+import dev.hugofaria.algafood.api.mapper.CozinhaMapper;
 import dev.hugofaria.algafood.api.model.CozinhaModel;
 import dev.hugofaria.algafood.api.model.input.CozinhaInput;
-import dev.hugofaria.algafood.api.mapper.CozinhaMapper;
+import dev.hugofaria.algafood.api.openapi.controller.CozinhaControllerOpenApi;
 import dev.hugofaria.algafood.domain.model.Cozinha;
 import dev.hugofaria.algafood.domain.repository.CozinhaRepository;
 import dev.hugofaria.algafood.domain.service.CadastroCozinhaService;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/cozinhas")
-public class CozinhaController {
+public class CozinhaController implements CozinhaControllerOpenApi {
 
     private final CozinhaRepository cozinhaRepository;
 
@@ -29,23 +31,27 @@ public class CozinhaController {
 
     private final CozinhaMapper cozinhaMapper;
 
-    @GetMapping
-    public Page<CozinhaModel> listar(@PageableDefault(size = 10) Pageable paginacao) {
-        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(paginacao);
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public Page<CozinhaModel> listar(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 
-        List<CozinhaModel> cozinhasDto = cozinhaMapper.toCollectionModel(cozinhasPage.getContent());
+        List<CozinhaModel> cozinhasModel = cozinhaMapper
+                .toCollectionModel(cozinhasPage.getContent());
 
-        return new PageImpl<>(cozinhasDto, paginacao, cozinhasPage.getTotalElements());
+        Page<CozinhaModel> cozinhasModelPage = new PageImpl<>(cozinhasModel, pageable,
+                cozinhasPage.getTotalElements());
+
+        return cozinhasModelPage;
     }
 
-    @GetMapping("/{cozinhaId}")
+    @GetMapping(value = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CozinhaModel buscar(@PathVariable Long cozinhaId) {
         Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
 
         return cozinhaMapper.toModel(cozinha);
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
         Cozinha cozinha = cozinhaMapper.toDomainObject(cozinhaInput);
@@ -54,7 +60,7 @@ public class CozinhaController {
         return cozinhaMapper.toModel(cozinha);
     }
 
-    @PutMapping("/{cozinhaId}")
+    @PutMapping(value = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CozinhaModel atualizar(@PathVariable Long cozinhaId,
                                   @RequestBody @Valid CozinhaInput cozinhaInput) {
         Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
@@ -64,7 +70,7 @@ public class CozinhaController {
         return cozinhaMapper.toModel(cozinhaAtual);
     }
 
-    @DeleteMapping("/{cozinhaId}")
+    @DeleteMapping(value = "/{cozinhaId}", produces = {})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cozinhaId) {
         cadastroCozinha.excluir(cozinhaId);

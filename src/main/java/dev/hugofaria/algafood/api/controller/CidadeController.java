@@ -1,9 +1,9 @@
 package dev.hugofaria.algafood.api.controller;
 
-
+import dev.hugofaria.algafood.api.openapi.controller.CidadeControllerOpenApi;
+import dev.hugofaria.algafood.api.mapper.CidadeMapper;
 import dev.hugofaria.algafood.api.model.CidadeModel;
 import dev.hugofaria.algafood.api.model.input.CidadeInput;
-import dev.hugofaria.algafood.api.mapper.CidadeMapper;
 import dev.hugofaria.algafood.domain.exception.EstadoNaoEncontradoException;
 import dev.hugofaria.algafood.domain.exception.NegocioException;
 import dev.hugofaria.algafood.domain.model.Cidade;
@@ -11,6 +11,7 @@ import dev.hugofaria.algafood.domain.repository.CidadeRepository;
 import dev.hugofaria.algafood.domain.service.CadastroCidadeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/cidades")
-public class CidadeController {
+public class CidadeController implements CidadeControllerOpenApi {
 
     private final CidadeRepository cidadeRepository;
 
@@ -27,21 +28,21 @@ public class CidadeController {
 
     private final CidadeMapper cidadeMapper;
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CidadeModel> listar() {
         List<Cidade> todasCidades = cidadeRepository.findAll();
 
         return cidadeMapper.toCollectionModel(todasCidades);
     }
 
-    @GetMapping("/{cidadeId}")
+    @GetMapping(path = "/{cidadeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CidadeModel buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
         return cidadeMapper.toModel(cidade);
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
         try {
@@ -55,7 +56,7 @@ public class CidadeController {
         }
     }
 
-    @PutMapping("/{cidadeId}")
+    @PutMapping(path = "/{cidadeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CidadeModel atualizar(@PathVariable Long cidadeId,
                                  @RequestBody @Valid CidadeInput cidadeInput) {
         try {

@@ -1,5 +1,6 @@
 package dev.hugofaria.algafood.api.controller;
 
+import dev.hugofaria.algafood.api.openapi.controller.GrupoControllerOpenApi;
 import dev.hugofaria.algafood.api.mapper.GrupoMapper;
 import dev.hugofaria.algafood.api.model.GrupoModel;
 import dev.hugofaria.algafood.api.model.input.GrupoInput;
@@ -8,6 +9,7 @@ import dev.hugofaria.algafood.domain.repository.GrupoRepository;
 import dev.hugofaria.algafood.domain.service.CadastroGrupoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,8 +17,8 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/grupos")
-public class GrupoController {
+@RequestMapping(path = "/grupos")
+public class GrupoController implements GrupoControllerOpenApi {
 
     private final GrupoRepository grupoRepository;
 
@@ -24,22 +26,21 @@ public class GrupoController {
 
     private final GrupoMapper grupoMapper;
 
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GrupoModel> listar() {
         List<Grupo> todosGrupos = grupoRepository.findAll();
 
         return grupoMapper.toCollectionModel(todosGrupos);
     }
 
-    @GetMapping("/{grupoId}")
+    @GetMapping(path = "/{grupoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public GrupoModel buscar(@PathVariable Long grupoId) {
         Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
 
         return grupoMapper.toModel(grupo);
     }
 
-    @PostMapping
+    @PostMapping(MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoModel adicionar(@RequestBody @Valid GrupoInput grupoInput) {
         Grupo grupo = grupoMapper.toDomainObject(grupoInput);
@@ -49,7 +50,7 @@ public class GrupoController {
         return grupoMapper.toModel(grupo);
     }
 
-    @PutMapping("/{grupoId}")
+    @PutMapping(path = "/{grupoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public GrupoModel atualizar(@PathVariable Long grupoId,
                                 @RequestBody @Valid GrupoInput grupoInput) {
         Grupo grupoAtual = cadastroGrupo.buscarOuFalhar(grupoId);
