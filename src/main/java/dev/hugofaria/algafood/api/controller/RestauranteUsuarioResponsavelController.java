@@ -1,12 +1,13 @@
 package dev.hugofaria.algafood.api.controller;
 
-
 import dev.hugofaria.algafood.api.mapper.UsuarioMapper;
 import dev.hugofaria.algafood.api.model.UsuarioModel;
+import dev.hugofaria.algafood.api.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
 import dev.hugofaria.algafood.domain.model.Restaurante;
 import dev.hugofaria.algafood.domain.service.CadastroRestauranteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,13 +15,14 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/responsaveis")
-public class RestauranteUsuarioResponsavelController {
+public class RestauranteUsuarioResponsavelController implements RestauranteUsuarioResponsavelControllerOpenApi {
 
     private final CadastroRestauranteService cadastroRestaurante;
 
     private final UsuarioMapper usuarioMapper;
 
-    @GetMapping
+    @Override
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UsuarioModel> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
 

@@ -1,14 +1,16 @@
 package dev.hugofaria.algafood.api.controller;
 
+import dev.hugofaria.algafood.api.openapi.controller.FluxoPedidoControllerOpenApi;
 import dev.hugofaria.algafood.domain.service.FluxoPedidoService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "/pedidos/{codigoPedido}")
-public class FluxoPedidoController {
+@RequestMapping(path = "/pedidos/{codigoPedido}")
+public class FluxoPedidoController implements FluxoPedidoControllerOpenApi {
 
     private final FluxoPedidoService fluxoPedido;
 

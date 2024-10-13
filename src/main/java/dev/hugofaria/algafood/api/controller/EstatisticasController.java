@@ -1,5 +1,6 @@
 package dev.hugofaria.algafood.api.controller;
 
+import dev.hugofaria.algafood.api.openapi.controller.EstatisticasControllerOpenApi;
 import dev.hugofaria.algafood.domain.filter.VendaDiariaFilter;
 import dev.hugofaria.algafood.domain.model.dto.VendaDiaria;
 import dev.hugofaria.algafood.domain.service.VendaQueryService;
@@ -18,18 +19,20 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping(path = "/estatisticas")
-public class EstatisticasController {
+public class EstatisticasController implements EstatisticasControllerOpenApi {
 
     private final VendaQueryService vendaQueryService;
 
     private final VendaReportService vendaReportService;
 
+    @Override
     @GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro,
                                                     @RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {
         return vendaQueryService.consultarVendasDiarias(filtro, timeOffset);
     }
 
+    @Override
     @GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter filtro,
                                                             @RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {

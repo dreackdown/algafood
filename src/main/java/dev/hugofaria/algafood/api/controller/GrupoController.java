@@ -1,9 +1,9 @@
 package dev.hugofaria.algafood.api.controller;
 
-import dev.hugofaria.algafood.api.openapi.controller.GrupoControllerOpenApi;
 import dev.hugofaria.algafood.api.mapper.GrupoMapper;
 import dev.hugofaria.algafood.api.model.GrupoModel;
 import dev.hugofaria.algafood.api.model.input.GrupoInput;
+import dev.hugofaria.algafood.api.openapi.controller.GrupoControllerOpenApi;
 import dev.hugofaria.algafood.domain.model.Grupo;
 import dev.hugofaria.algafood.domain.repository.GrupoRepository;
 import dev.hugofaria.algafood.domain.service.CadastroGrupoService;
@@ -26,6 +26,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 
     private final GrupoMapper grupoMapper;
 
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<GrupoModel> listar() {
         List<Grupo> todosGrupos = grupoRepository.findAll();
@@ -33,6 +34,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoMapper.toCollectionModel(todosGrupos);
     }
 
+    @Override
     @GetMapping(path = "/{grupoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public GrupoModel buscar(@PathVariable Long grupoId) {
         Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
@@ -40,7 +42,8 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoMapper.toModel(grupo);
     }
 
-    @PostMapping(MediaType.APPLICATION_JSON_VALUE)
+    @Override
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoModel adicionar(@RequestBody @Valid GrupoInput grupoInput) {
         Grupo grupo = grupoMapper.toDomainObject(grupoInput);
@@ -50,6 +53,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoMapper.toModel(grupo);
     }
 
+    @Override
     @PutMapping(path = "/{grupoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public GrupoModel atualizar(@PathVariable Long grupoId,
                                 @RequestBody @Valid GrupoInput grupoInput) {
@@ -62,6 +66,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return grupoMapper.toModel(grupoAtual);
     }
 
+    @Override
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long grupoId) {

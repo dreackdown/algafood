@@ -11,6 +11,7 @@ import dev.hugofaria.algafood.api.openapi.model.PedidosResumoModelOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
@@ -20,14 +21,20 @@ import org.springframework.web.context.request.ServletWebRequest;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.*;
 import springfox.documentation.schema.AlternateTypeRules;
-import springfox.documentation.schema.ScalarType;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.Response;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.json.JacksonModuleRegistrar;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLStreamHandler;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -48,17 +55,10 @@ public class SpringFoxConfig {
                 .globalResponses(HttpMethod.POST, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
-//                .globalRequestParameters(Collections.singletonList(
-//                        new RequestParameterBuilder()
-//                                .name("campos")
-//                                .description("Nomes das propriedades para filtrar na resposta, separados por vírgula")
-//                                .in(ParameterType.QUERY)
-//                                .required(true)
-//                                .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
-//                                .build())
-//                )
                 .additionalModels(typeResolver.resolve(Problem.class))
-                .ignoredParameterTypes(ServletWebRequest.class)
+                .ignoredParameterTypes(ServletWebRequest.class,
+                        URL.class, URI.class, URLStreamHandler.class, Resource.class,
+                        File.class, InputStream.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(Page.class, CozinhaModel.class),
@@ -71,7 +71,12 @@ public class SpringFoxConfig {
                         new Tag("Grupos", "Gerencia os grupos de usuários"),
                         new Tag("Cozinhas", "Gerencia as cozinhas"),
                         new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
-                        new Tag("Pedidos", "Gerencia os pedidos"));
+                        new Tag("Pedidos", "Gerencia os pedidos"),
+                        new Tag("Restaurantes", "Gerencia os restaurantes"),
+                        new Tag("Estados", "Gerencia os estados"),
+                        new Tag("Produtos", "Gerencia os produtos de restaurantes"),
+                        new Tag("Usuários", "Gerencia os usuários"),
+                        new Tag("Estatísticas", "Estatísticas da AlgaFood"));
     }
 
     @Bean
