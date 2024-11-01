@@ -1,21 +1,27 @@
 package dev.hugofaria.algafood.api.controller;
 
-import dev.hugofaria.algafood.api.openapi.controller.CidadeControllerOpenApi;
-import dev.hugofaria.algafood.api.mapper.CidadeMapper;
+import dev.hugofaria.algafood.api.ResourceUriHelper;
+import dev.hugofaria.algafood.api.assembler.CidadeInputDisassembler;
+import dev.hugofaria.algafood.api.assembler.CidadeModelAssembler;
 import dev.hugofaria.algafood.api.model.CidadeModel;
 import dev.hugofaria.algafood.api.model.input.CidadeInput;
+import dev.hugofaria.algafood.api.openapi.controller.CidadeControllerOpenApi;
 import dev.hugofaria.algafood.domain.exception.EstadoNaoEncontradoException;
 import dev.hugofaria.algafood.domain.exception.NegocioException;
 import dev.hugofaria.algafood.domain.model.Cidade;
 import dev.hugofaria.algafood.domain.repository.CidadeRepository;
 import dev.hugofaria.algafood.domain.service.CadastroCidadeService;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @AllArgsConstructor
 @RestController
@@ -26,31 +32,40 @@ public class CidadeController implements CidadeControllerOpenApi {
 
     private final CadastroCidadeService cadastroCidade;
 
-    private final CidadeMapper cidadeMapper;
+    private final CidadeModelAssembler cidadeModelAssembler;
 
+    private final CidadeInputDisassembler cidadeInputDisassembler;
+
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<CidadeModel> listar() {
+    public CollectionModel<CidadeModel> listar() {
         List<Cidade> todasCidades = cidadeRepository.findAll();
 
-        return cidadeMapper.toCollectionModel(todasCidades);
+        return cidadeModelAssembler.toCollectionModel(todasCidades);
     }
 
+    @Override
     @GetMapping(path = "/{cidadeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CidadeModel buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
-        return cidadeMapper.toModel(cidade);
+        return cidadeModelAssembler.toModel(cidade);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
         try {
-            Cidade cidade = cidadeMapper.toDomainObject(cidadeInput);
+            Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
 
             cidade = cadastroCidade.salvar(cidade);
 
-            return cidadeMapper.toModel(cidade);
+            CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidade);
+
+            ResourceUriHelper.addUriInResponseHeader(cidadeModel.getId());
+
+            return cidadeModel;
+
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
@@ -62,11 +77,11 @@ public class CidadeController implements CidadeControllerOpenApi {
         try {
             Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
 
-            cidadeMapper.copyToDomainObject(cidadeInput, cidadeAtual);
+            cidadeInputDisassembler.copyToDomainObject(cidadeInput, cidadeAtual);
 
             cidadeAtual = cadastroCidade.salvar(cidadeAtual);
 
-            return cidadeMapper.toModel(cidadeAtual);
+            return cidadeModelAssembler.toModel(cidadeAtual);
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }

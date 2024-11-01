@@ -4,6 +4,7 @@ import dev.hugofaria.algafood.api.exceptionhandler.Problem;
 import dev.hugofaria.algafood.api.model.CidadeModel;
 import dev.hugofaria.algafood.api.model.input.CidadeInput;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface CidadeControllerOpenApi {
 
     @ApiOperation("Lista as cidades")
-    List<CidadeModel> listar();
+    CollectionModel<CidadeModel> listar();
 
     @ApiOperation("Busca uma cidade por ID")
     @ApiResponses({

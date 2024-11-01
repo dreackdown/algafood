@@ -1,6 +1,6 @@
 package dev.hugofaria.algafood.api.controller;
 
-import dev.hugofaria.algafood.api.mapper.PermissaoMapper;
+import dev.hugofaria.algafood.api.assembler.PermissaoMapper;
 import dev.hugofaria.algafood.api.model.PermissaoModel;
 import dev.hugofaria.algafood.api.openapi.controller.GrupoPermissaoControllerOpenApi;
 import dev.hugofaria.algafood.domain.model.Grupo;

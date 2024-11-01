@@ -1,7 +1,8 @@
 package dev.hugofaria.algafood.api.controller;
 
 
-import dev.hugofaria.algafood.api.mapper.EstadoMapper;
+import dev.hugofaria.algafood.api.assembler.EstadoInputDisassembler;
+import dev.hugofaria.algafood.api.assembler.EstadoModelAssembler;
 import dev.hugofaria.algafood.api.model.EstadoModel;
 import dev.hugofaria.algafood.api.model.input.EstadoInput;
 import dev.hugofaria.algafood.api.openapi.controller.EstadoControllerOpenApi;
@@ -9,6 +10,7 @@ import dev.hugofaria.algafood.domain.model.Estado;
 import dev.hugofaria.algafood.domain.repository.EstadoRepository;
 import dev.hugofaria.algafood.domain.service.CadastroEstadoService;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -25,41 +27,44 @@ public class EstadoController implements EstadoControllerOpenApi {
 
     private final CadastroEstadoService cadastroEstado;
 
-    private final EstadoMapper estadoMapper;
+    private final EstadoModelAssembler estadoModelAssembler;
 
+    private final EstadoInputDisassembler estadoInputDisassembler;
+
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<EstadoModel> listar() {
+    public CollectionModel<EstadoModel> listar() {
         List<Estado> todosEstados = estadoRepository.findAll();
 
-        return estadoMapper.toCollectionModel(todosEstados);
+        return estadoModelAssembler.toCollectionModel(todosEstados);
     }
 
     @GetMapping(value = "/{estadoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public EstadoModel buscar(@PathVariable Long estadoId) {
         Estado estado = cadastroEstado.buscarOuFalhar(estadoId);
 
-        return estadoMapper.toModel(estado);
+        return estadoModelAssembler.toModel(estado);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public EstadoModel adicionar(@RequestBody @Valid EstadoInput estadoInput) {
-        Estado estado = estadoMapper.toDomainObject(estadoInput);
+        Estado estado = estadoInputDisassembler.toDomainObject(estadoInput);
 
         estado = cadastroEstado.salvar(estado);
 
-        return estadoMapper.toModel(estado);
+        return estadoModelAssembler.toModel(estado);
     }
 
     @PutMapping(value = "/{estadoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public EstadoModel atualizar(@PathVariable Long estadoId, @RequestBody @Valid EstadoInput estadoInput) {
         Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
 
-        estadoMapper.copyToDomainObject(estadoInput, estadoAtual);
+        estadoInputDisassembler.copyToDomainObject(estadoInput, estadoAtual);
 
         estadoAtual = cadastroEstado.salvar(estadoAtual);
 
-        return estadoMapper.toModel(estadoAtual);
+        return estadoModelAssembler.toModel(estadoAtual);
     }
 
     @DeleteMapping("/{estadoId}")

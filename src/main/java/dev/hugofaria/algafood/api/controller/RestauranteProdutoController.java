@@ -1,6 +1,6 @@
 package dev.hugofaria.algafood.api.controller;
 
-import dev.hugofaria.algafood.api.mapper.ProdutoMapper;
+import dev.hugofaria.algafood.api.assembler.ProdutoMapper;
 import dev.hugofaria.algafood.api.model.ProdutoModel;
 import dev.hugofaria.algafood.api.model.input.ProdutoInput;
 import dev.hugofaria.algafood.api.openapi.controller.RestauranteProdutoControllerOpenApi;

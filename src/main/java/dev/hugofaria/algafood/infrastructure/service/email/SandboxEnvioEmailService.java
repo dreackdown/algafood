@@ -10,6 +10,7 @@ import javax.mail.internet.MimeMessage;
 
 public class SandboxEnvioEmailService extends SmtpEnvioEmailService {
 
+
     @Autowired
     private EmailProperties emailProperties;
 

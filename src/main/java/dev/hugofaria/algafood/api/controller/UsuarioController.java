@@ -1,6 +1,7 @@
 package dev.hugofaria.algafood.api.controller;
 
-import dev.hugofaria.algafood.api.mapper.UsuarioMapper;
+import dev.hugofaria.algafood.api.assembler.UsuarioInputDisassembler;
+import dev.hugofaria.algafood.api.assembler.UsuarioModelAssembler;
 import dev.hugofaria.algafood.api.model.UsuarioModel;
 import dev.hugofaria.algafood.api.model.input.SenhaInput;
 import dev.hugofaria.algafood.api.model.input.UsuarioComSenhaInput;
@@ -10,6 +11,7 @@ import dev.hugofaria.algafood.domain.model.Usuario;
 import dev.hugofaria.algafood.domain.repository.UsuarioRepository;
 import dev.hugofaria.algafood.domain.service.CadastroUsuarioService;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -26,39 +28,41 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 
     private final CadastroUsuarioService cadastroUsuario;
 
-    private final UsuarioMapper usuarioMapper;
+    private final UsuarioModelAssembler usuarioModelAssembler;
+
+    private final UsuarioInputDisassembler usuarioInputDisassembler;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UsuarioModel> listar() {
+    public CollectionModel<UsuarioModel> listar() {
         List<Usuario> todasUsuarios = usuarioRepository.findAll();
 
-        return usuarioMapper.toCollectionModel(todasUsuarios);
+        return usuarioModelAssembler.toCollectionModel(todasUsuarios);
     }
 
     @GetMapping(value = "/{usuarioId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UsuarioModel buscar(@PathVariable Long usuarioId) {
         Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
 
-        return usuarioMapper.toModel(usuario);
+        return usuarioModelAssembler.toModel(usuario);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioModel adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
-        Usuario usuario = usuarioMapper.toDomainObject(usuarioInput);
+        Usuario usuario = usuarioInputDisassembler.toDomainObject(usuarioInput);
         usuario = cadastroUsuario.salvar(usuario);
 
-        return usuarioMapper.toModel(usuario);
+        return usuarioModelAssembler.toModel(usuario);
     }
 
     @PutMapping(value = "/{usuarioId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UsuarioModel atualizar(@PathVariable Long usuarioId,
                                   @RequestBody @Valid UsuarioInput usuarioInput) {
         Usuario usuarioAtual = cadastroUsuario.buscarOuFalhar(usuarioId);
-        usuarioMapper.copyToDomainObject(usuarioInput, usuarioAtual);
+        usuarioInputDisassembler.copyToDomainObject(usuarioInput, usuarioAtual);
         usuarioAtual = cadastroUsuario.salvar(usuarioAtual);
 
-        return usuarioMapper.toModel(usuarioAtual);
+        return usuarioModelAssembler.toModel(usuarioAtual);
     }
 
     @PutMapping("/{usuarioId}/senha")

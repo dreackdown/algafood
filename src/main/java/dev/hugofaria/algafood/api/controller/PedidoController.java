@@ -1,11 +1,13 @@
 package dev.hugofaria.algafood.api.controller;
 
+import dev.hugofaria.algafood.api.assembler.PedidoInputDisassembler;
+import dev.hugofaria.algafood.api.assembler.PedidoModelAssembler;
+import dev.hugofaria.algafood.api.assembler.PedidoResumoModelAssembler;
 import dev.hugofaria.algafood.api.model.PedidoModel;
 import dev.hugofaria.algafood.api.model.PedidoResumoModel;
 import dev.hugofaria.algafood.api.model.input.PedidoInput;
-import dev.hugofaria.algafood.api.mapper.PedidoMapper;
-import dev.hugofaria.algafood.api.mapper.PedidoResumoMapper;
 import dev.hugofaria.algafood.api.openapi.controller.PedidoControllerOpenApi;
+import dev.hugofaria.algafood.core.data.PageWrapper;
 import dev.hugofaria.algafood.core.data.PageableTranslator;
 import dev.hugofaria.algafood.domain.exception.EntidadeNaoEncontradaException;
 import dev.hugofaria.algafood.domain.exception.NegocioException;
@@ -15,19 +17,17 @@ import dev.hugofaria.algafood.domain.model.Usuario;
 import dev.hugofaria.algafood.domain.repository.PedidoRepository;
 import dev.hugofaria.algafood.domain.service.EmissaoPedidoService;
 import dev.hugofaria.algafood.infrastructure.repository.spec.PedidoSpecs;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -37,34 +37,36 @@ public class PedidoController implements PedidoControllerOpenApi {
 
     private final PedidoRepository pedidoRepository;
 
-    private final EmissaoPedidoService emissaoPedido;
+    private EmissaoPedidoService emissaoPedido;
 
-    private final PedidoMapper pedidoMapper;
+    private final PedidoModelAssembler pedidoModelAssembler;
 
-    private final PedidoResumoMapper pedidoResumoMapper;
+    private final PedidoResumoModelAssembler pedidoResumoModelAssembler;
 
+    private final PedidoInputDisassembler pedidoInputDisassembler;
+
+    private final PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
+
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro,
-                                             @PageableDefault(size = 10) Pageable pageable) {
-        pageable = traduzirPageable(pageable);
+    public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro,
+                                                   @PageableDefault(size = 10) Pageable pageable) {
+        Pageable pageableTraduzido = traduzirPageable(pageable);
 
         Page<Pedido> pedidosPage = pedidoRepository.findAll(
-                PedidoSpecs.usandoFiltro(filtro), pageable);
+                PedidoSpecs.usandoFiltro(filtro), pageableTraduzido);
 
-        List<PedidoResumoModel> pedidosResumoModel = pedidoResumoMapper
-                .toCollectionModel(pedidosPage.getContent());
+        pedidosPage = new PageWrapper<>(pedidosPage, pageable);
 
-        Page<PedidoResumoModel> pedidosResumoModelPage = new PageImpl<>(
-                pedidosResumoModel, pageable, pedidosPage.getTotalElements());
-
-        return pedidosResumoModelPage;
+        return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
     }
 
+    @Override
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public PedidoModel adicionar(@Valid @RequestBody PedidoInput pedidoInput) {
         try {
-            Pedido novoPedido = pedidoMapper.toDomainObject(pedidoInput);
+            Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
 
             // TODO pegar usuário autenticado
             novoPedido.setCliente(new Usuario());
@@ -72,17 +74,18 @@ public class PedidoController implements PedidoControllerOpenApi {
 
             novoPedido = emissaoPedido.emitir(novoPedido);
 
-            return pedidoMapper.toModel(novoPedido);
+            return pedidoModelAssembler.toModel(novoPedido);
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
 
+    @Override
     @GetMapping(value = "/{codigoPedido}", produces = MediaType.APPLICATION_JSON_VALUE)
     public PedidoModel buscar(@PathVariable String codigoPedido) {
         Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
 
-        return pedidoMapper.toModel(pedido);
+        return pedidoModelAssembler.toModel(pedido);
     }
 
     private Pageable traduzirPageable(Pageable apiPageable) {

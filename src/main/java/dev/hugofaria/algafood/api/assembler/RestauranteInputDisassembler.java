@@ -1,32 +1,18 @@
-package dev.hugofaria.algafood.api.mapper;
+package dev.hugofaria.algafood.api.assembler;
 
-import dev.hugofaria.algafood.api.model.RestauranteModel;
 import dev.hugofaria.algafood.api.model.input.RestauranteInput;
 import dev.hugofaria.algafood.domain.model.Cidade;
 import dev.hugofaria.algafood.domain.model.Cozinha;
 import dev.hugofaria.algafood.domain.model.Restaurante;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
-@AllArgsConstructor
-public class RestauranteMapper {
+public class RestauranteInputDisassembler {
 
-    private final ModelMapper modelMapper;
-
-    public RestauranteModel toModel(Restaurante restaurante) {
-        return modelMapper.map(restaurante, RestauranteModel.class);
-    }
-
-    public List<RestauranteModel> toCollectionModel(List<Restaurante> restaurantes) {
-        return restaurantes.stream()
-                .map(this::toModel)
-                .collect(Collectors.toList());
-    }
+    @Autowired
+    private ModelMapper modelMapper;
 
     public Restaurante toDomainObject(RestauranteInput restauranteInput) {
         return modelMapper.map(restauranteInput, Restaurante.class);

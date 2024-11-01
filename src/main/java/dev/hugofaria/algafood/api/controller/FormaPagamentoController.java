@@ -1,6 +1,7 @@
 package dev.hugofaria.algafood.api.controller;
 
-import dev.hugofaria.algafood.api.mapper.FormaPagamentoMapper;
+import dev.hugofaria.algafood.api.assembler.FormaPagamentoInputDisassembler;
+import dev.hugofaria.algafood.api.assembler.FormaPagamentoModelAssembler;
 import dev.hugofaria.algafood.api.model.FormaPagamentoModel;
 import dev.hugofaria.algafood.api.model.input.FormaPagamentoInput;
 import dev.hugofaria.algafood.api.openapi.controller.FormaPagamentoControllerOpenApi;
@@ -8,6 +9,7 @@ import dev.hugofaria.algafood.domain.model.FormaPagamento;
 import dev.hugofaria.algafood.domain.repository.FormaPagamentoRepository;
 import dev.hugofaria.algafood.domain.service.CadastroFormaPagamentoService;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,10 +32,13 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
     private final CadastroFormaPagamentoService cadastroFormaPagamento;
 
-    private final FormaPagamentoMapper formaPagamentoMapper;
+    private final FormaPagamentoModelAssembler formaPagamentoModelAssembler;
 
+    private final FormaPagamentoInputDisassembler formaPagamentoInputDisassembler;
+
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
+    public ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
 
         String eTag = "0";
@@ -50,8 +55,8 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
         List<FormaPagamento> todasFormasPagamentos = formaPagamentoRepository.findAll();
 
-        List<FormaPagamentoModel> formasPagamentosModel = formaPagamentoMapper
-                .toCollectionModel(todasFormasPagamentos);
+        CollectionModel<FormaPagamentoModel> formasPagamentosModel =
+                formaPagamentoModelAssembler.toCollectionModel(todasFormasPagamentos);
 
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
@@ -59,6 +64,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
                 .body(formasPagamentosModel);
     }
 
+    @Override
     @GetMapping(value = "/{formaPagamentoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long formaPagamentoId,
                                                       ServletWebRequest request) {
@@ -80,7 +86,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
 
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
 
-        FormaPagamentoModel formaPagamentoModel = formaPagamentoMapper.toModel(formaPagamento);
+        FormaPagamentoModel formaPagamentoModel = formaPagamentoModelAssembler.toModel(formaPagamento);
 
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
@@ -88,29 +94,32 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
                 .body(formaPagamentoModel);
     }
 
+    @Override
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public FormaPagamentoModel adicionar(@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
-        FormaPagamento formaPagamento = formaPagamentoMapper.toDomainObject(formaPagamentoInput);
+        FormaPagamento formaPagamento = formaPagamentoInputDisassembler.toDomainObject(formaPagamentoInput);
 
         formaPagamento = cadastroFormaPagamento.salvar(formaPagamento);
 
-        return formaPagamentoMapper.toModel(formaPagamento);
+        return formaPagamentoModelAssembler.toModel(formaPagamento);
     }
 
+    @Override
     @PutMapping(value = "/{formaPagamentoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public FormaPagamentoModel atualizar(@PathVariable Long formaPagamentoId,
                                          @RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
         FormaPagamento formaPagamentoAtual = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
 
-        formaPagamentoMapper.copyToDomainObject(formaPagamentoInput, formaPagamentoAtual);
+        formaPagamentoInputDisassembler.copyToDomainObject(formaPagamentoInput, formaPagamentoAtual);
 
         formaPagamentoAtual = cadastroFormaPagamento.salvar(formaPagamentoAtual);
 
-        return formaPagamentoMapper.toModel(formaPagamentoAtual);
+        return formaPagamentoModelAssembler.toModel(formaPagamentoAtual);
     }
 
-    @DeleteMapping(value = "/{formaPagamentoId}", produces = {})
+    @Override
+    @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long formaPagamentoId) {
         cadastroFormaPagamento.excluir(formaPagamentoId);

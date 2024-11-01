@@ -1,4 +1,4 @@
-package dev.hugofaria.algafood.api.mapper;
+package dev.hugofaria.algafood.api.assembler;
 
 import dev.hugofaria.algafood.api.model.GrupoModel;
 import dev.hugofaria.algafood.api.model.input.GrupoInput;

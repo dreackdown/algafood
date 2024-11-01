@@ -1,5 +1,6 @@
 package dev.hugofaria.algafood.domain.model;
 
+import dev.hugofaria.algafood.domain.event.PedidoCanceladoEvent;
 import dev.hugofaria.algafood.domain.event.PedidoConfirmadoEvent;
 import dev.hugofaria.algafood.domain.exception.NegocioException;
 import lombok.Data;
@@ -55,7 +56,7 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     @JoinColumn(name = "usuario_cliente_id", nullable = false)
     private Usuario cliente;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ItemPedido> itens = new ArrayList<>();
 
     public void calcularValorTotal() {
@@ -83,6 +84,20 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     public void cancelar() {
         setStatus(StatusPedido.CANCELADO);
         setDataCancelamento(OffsetDateTime.now());
+
+        registerEvent(new PedidoCanceladoEvent(this));
+    }
+
+    public boolean podeSerConfirmado() {
+        return getStatus().podeAlterarPara(StatusPedido.CONFIRMADO);
+    }
+
+    public boolean podeSerEntregue() {
+        return getStatus().podeAlterarPara(StatusPedido.ENTREGUE);
+    }
+
+    public boolean podeSerCancelado() {
+        return getStatus().podeAlterarPara(StatusPedido.CANCELADO);
     }
 
     private void setStatus(StatusPedido novoStatus) {
